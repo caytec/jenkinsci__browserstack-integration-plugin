@@ -10,6 +10,8 @@ import org.w3c.dom.NodeList;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
@@ -27,6 +29,13 @@ public class XmlReporter {
 
         try {
             DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
+            String FEATURE = "http://apache.org/xml/features/disallow-doctype-decl";
+            try {
+                dbFactory.setFeature(FEATURE, true);
+            } catch (ParserConfigurationException e) {
+                throw new IllegalStateException("ParserConfigurationException was thrown. The feature '"
+                        + FEATURE + "' is not supported by your XML processor.", e);
+            }
             DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
             doc = dBuilder.parse(f);
         } catch (Exception e) {
